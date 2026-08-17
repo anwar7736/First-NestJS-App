@@ -1,52 +1,33 @@
 import { Injectable } from '@nestjs/common';
+import { CreatePostDto } from './dtos/create-post-dto';
+import { UpdatePostDto } from './dtos/update-post-dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Post } from './entities/post.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PostService {
-    async getPosts(id?: string) {
-        return await fetch(`https://jsonplaceholder.typicode.com/posts${id ? `/${id}` : ``}`)
-            .then(response => response.json())
-            .then(data => data);
+    constructor(
+        @InjectRepository(Post)
+        private postRepository: Repository<Post>,
+    ) { }
+    async getPosts(id?: number): Promise<Post | Post[] | null> {
+        if (id) {
+            return this.postRepository.findOne({ where: { id, status: true } });
+        }
 
+        return this.postRepository.find({ where: { status: true } });
     }
 
-    async storePost() {
-        return await fetch('https://jsonplaceholder.typicode.com/posts', {
-            method: 'POST',
-            body: JSON.stringify({
-                title: 'foo',
-                body: 'bar',
-                userId: 1,
-            }),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            },
-        })
-            .then((response) => response.json())
-            .then(data => data);
+    async storePost(createPostDto: CreatePostDto) {
+        return await this.postRepository.save(createPostDto);
     }
 
-    async updatePost(id: string) {
-        return await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify({
-                id: 1,
-                title: 'foo updated',
-                body: 'bar updated',
-                userId: 1,
-            }),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            },
-        })
-            .then((response) => response.json())
-            .then(data => data);
+    async updatePost(id: number, updatePostDto: UpdatePostDto) {
+        return await this.postRepository.update(id, updatePostDto);
     }
 
-    async deletePost(id: string) {
-        return await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
-            method: 'DELETE'
-        })
-            .then((response) => response.json())
-            .then(data => data);
+    async deletePost(id: number) {
+        return await this.postRepository.delete(id);
     }
 }

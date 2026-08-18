@@ -46,6 +46,25 @@ export class AuthService {
 
     }
 
+    async validateUser(email: string, pass: string): Promise<any> {
+        const user = await this.userRepository.findOne({
+            where: { email, status: true }
+        });
+        if (user && await bcrypt.compare(pass, user.password)) {
+        const { password, ...result } = user;
+        return result;
+        }
+
+        return null;
+    }
+
+    async login(user: any) {
+        const payload = { username: user.email, sub: user.id };
+        return {
+            access_token: this.jwtService.sign(payload),
+        };
+    }
+
     async signin(userSignInDto: UserSignInDto) {
         const user = await this.userRepository.findOne({
             select: {

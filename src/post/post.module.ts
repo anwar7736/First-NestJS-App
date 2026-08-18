@@ -3,10 +3,10 @@ import { PostController } from './post.controller';
 import { PostService } from './post.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [AuthGuard, TypeOrmModule.forFeature([Post])],
+  imports: [TypeOrmModule.forFeature([Post]), AuthModule],
   controllers: [PostController],
   providers: [PostService]
 })

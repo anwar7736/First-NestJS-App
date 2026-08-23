@@ -8,17 +8,17 @@ import { TypeOrmModule } from "@nestjs/typeorm";
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'mysql',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('DB_USERNAME'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_DATABASE'),
+        host: configService.get<string>('MYSQL_DB_HOST'),
+        port: configService.get<number>('MYSQL_DB_PORT'),
+        username: configService.get<string>('MYSQL_DB_USERNAME'),
+        password: configService.get<string>('MYSQL_DB_PASSWORD'),
+        database: configService.get<string>('MYSQL_DB_DATABASE'),
         autoLoadEntities: true,
         synchronize: true,
       }),
     }),
   ],
 })
-export class DBModule {
+export class MYSQLModule {
 
 }

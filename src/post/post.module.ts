@@ -6,7 +6,7 @@ import { Post } from './entities/post.entity';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Post], 'pgsqlConnection'), AuthModule],
   controllers: [PostController],
   providers: [PostService]
 })

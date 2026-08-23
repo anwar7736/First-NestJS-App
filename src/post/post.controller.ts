@@ -3,13 +3,15 @@ import { PostService } from './post.service';
 import { CreatePostDto } from './dtos/create-post-dto';
 import { UpdatePostDto } from './dtos/update-post-dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { User } from 'src/user.decorator';
 
 @UseGuards(JwtAuthGuard)
 @Controller('posts')
 export class PostController {
     constructor(private readonly postService: PostService){}
     @Get()
-    async getPosts(){
+    async getPosts(@User() user: Request) {
+        console.log(user);
         return await this.postService.getPosts();
     }
 

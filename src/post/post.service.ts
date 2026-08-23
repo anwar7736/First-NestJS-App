@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class PostService {
     constructor(
-        @InjectRepository(Post)
+        @InjectRepository(Post, 'pgsqlConnection')
         private postRepository: Repository<Post>,
     ) { }
     async getPosts(id?: number): Promise<Post | Post[] | null> {

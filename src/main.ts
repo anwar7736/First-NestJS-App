@@ -28,6 +28,24 @@ async function bootstrap() {
     },
   });
 
+  app.connectMicroservice({
+  transport: Transport.KAFKA,
+
+  options: {
+    client: {
+      clientId: process.env.KAFKA_CLIENT_ID,
+
+      brokers: [
+        process.env.KAFKA_BROKER!,
+      ],
+    },
+
+    consumer: {
+      groupId: process.env.KAFKA_GROUP_ID!,
+    },
+  },
+});
+
   await app.startAllMicroservices();
   await app.listen(process.env.PORT ?? 3000);
 }

@@ -40,4 +40,9 @@ export class PostController {
     async handleOrderCreated(@Payload() createPostDto: CreatePostDto) {
         return await this.postService.storePost(createPostDto);
     }
+    
+    @EventPattern(process.env.KAFKA_QUEUE)
+    async handleOrderDeleted(@Payload() id: number) {
+        return await this.postService.deletePost(id);
+    }
 }

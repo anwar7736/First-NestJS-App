@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { LoggerMiddleware } from './post/middlewares/logger.middleware';
 import { FunctionalMiddleware } from './post/middlewares/function.middleware';
+import { Transport } from '@nestjs/microservices';
+import { PostCreatedDeserializer } from './post/deserializers/post-created.deserializer';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +14,21 @@ async function bootstrap() {
     }),
   );
   app.use(FunctionalMiddleware);
+  app.connectMicroservice({
+    transport: Transport.RMQ,
+    options: {
+      urls: [
+        `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@${process.env.RABBITMQ_HOST}:${process.env.RABBITMQ_PORT}`,
+      ],
+      queue: process.env.RABBITMQ_QUEUE,
+      queueOptions: {
+        durable: true,
+      },
+      deserializer: new PostCreatedDeserializer(),
+    },
+  });
+
+  await app.startAllMicroservices();
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

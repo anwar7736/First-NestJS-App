@@ -16,7 +16,12 @@ export class PostService {
             return this.postRepository.findOne({ where: { id, status: true } });
         }
 
-        return this.postRepository.find({ where: { status: true } });
+        return this.postRepository.find({
+            where: { status: true },
+            order: {
+                id: 'DESC'
+            },
+        });
     }
 
     async storePost(createPostDto: CreatePostDto) {

@@ -5,7 +5,6 @@ import { UserSignInDto } from './dtos/user-signin-dto';
 import { LocalAuthGuard } from './local-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
-@UseGuards(LocalAuthGuard)
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) { }
@@ -14,6 +13,7 @@ export class AuthController {
         return await this.authService.signup(userSignUpDto);
     }
 
+    @UseGuards(LocalAuthGuard)
     @Post('/signin')
     async signin(@Body() userSignInDto: UserSignInDto) {
         return await this.authService.login(userSignInDto);

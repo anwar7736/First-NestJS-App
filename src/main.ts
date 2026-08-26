@@ -14,6 +14,8 @@ async function bootstrap() {
     }),
   );
   app.use(FunctionalMiddleware);
+
+  //Config for RabbitMQ
   app.connectMicroservice({
     transport: Transport.RMQ,
     options: {
@@ -28,6 +30,7 @@ async function bootstrap() {
     },
   });
 
+    //Config for Kafka
   app.connectMicroservice({
   transport: Transport.KAFKA,
 
@@ -47,6 +50,7 @@ async function bootstrap() {
 });
 
   await app.startAllMicroservices();
+  
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

@@ -42,7 +42,7 @@ export class PostController {
     }
     
     @EventPattern(process.env.KAFKA_QUEUE)
-    async handleOrderDeleted(@Payload() id: number) {
-        return await this.postService.deletePost(id);
+    async handleOrderDeleted(@Payload() data: any) {
+        return await this.postService.deletePost(data.id);
     }
 }

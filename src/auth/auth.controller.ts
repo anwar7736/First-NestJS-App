@@ -4,15 +4,18 @@ import { UserSignUpDto } from './dtos/user-signup-dto';
 import { UserSignInDto } from './dtos/user-signin-dto';
 import { LocalAuthGuard } from './local-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) { }
+    @SkipThrottle({default: false})
     @Post('/signup')
     async signup(@Body() userSignUpDto: UserSignUpDto) {
         return await this.authService.signup(userSignUpDto);
     }
-
+    
     @UseGuards(LocalAuthGuard)
     @Post('/signin')
     async signin(@Body() userSignInDto: UserSignInDto) {

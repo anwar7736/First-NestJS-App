@@ -15,41 +15,41 @@ async function bootstrap() {
   );
   app.use(FunctionalMiddleware);
 
-  //Config for RabbitMQ
-  app.connectMicroservice({
-    transport: Transport.RMQ,
-    options: {
-      urls: [
-        `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@${process.env.RABBITMQ_HOST}:${process.env.RABBITMQ_PORT}`,
-      ],
-      queue: process.env.RABBITMQ_QUEUE,
-      queueOptions: {
-        durable: true,
-      },
-      deserializer: new PostCreatedDeserializer(),
-    },
-  });
+//   //Config for RabbitMQ
+//   app.connectMicroservice({
+//     transport: Transport.RMQ,
+//     options: {
+//       urls: [
+//         `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@${process.env.RABBITMQ_HOST}:${process.env.RABBITMQ_PORT}`,
+//       ],
+//       queue: process.env.RABBITMQ_QUEUE,
+//       queueOptions: {
+//         durable: true,
+//       },
+//       deserializer: new PostCreatedDeserializer(),
+//     },
+//   });
 
-    //Config for Kafka
-  app.connectMicroservice({
-  transport: Transport.KAFKA,
+//     //Config for Kafka
+//   app.connectMicroservice({
+//   transport: Transport.KAFKA,
 
-  options: {
-    client: {
-      clientId: process.env.KAFKA_CLIENT_ID,
+//   options: {
+//     client: {
+//       clientId: process.env.KAFKA_CLIENT_ID,
 
-      brokers: [
-        process.env.KAFKA_BROKER!,
-      ],
-    },
+//       brokers: [
+//         process.env.KAFKA_BROKER!,
+//       ],
+//     },
 
-    consumer: {
-      groupId: process.env.KAFKA_GROUP_ID!,
-    },
-  },
-});
+//     consumer: {
+//       groupId: process.env.KAFKA_GROUP_ID!,
+//     },
+//   },
+// });
 
-  await app.startAllMicroservices();
+//   await app.startAllMicroservices();
   
   await app.listen(process.env.PORT ?? 3000);
 }

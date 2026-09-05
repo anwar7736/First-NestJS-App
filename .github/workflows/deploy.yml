@@ -25,60 +25,31 @@ jobs:
 
             cd /home/ec2-user/First-NestJS-App
 
-            echo "========================================="
             echo "Pulling latest code..."
-            echo "========================================="
-
             git pull origin main
 
-            echo "========================================="
-            echo "Building NestJS Docker image..."
-            echo "========================================="
-
+            echo "Building NestJS image..."
             docker compose build nestjs
 
-            echo "========================================="
-            echo "Starting Docker containers..."
-            echo "========================================="
+            echo "Starting containers..."
+            docker compose up -d --force-recreate
 
-            docker compose up -d
-
-            echo "========================================="
-            echo "Waiting for containers..."
-            echo "========================================="
-
+            echo "Waiting for services..."
             sleep 10
 
-            echo "========================================="
-            echo "Running MySQL/MariaDB migrations..."
-            echo "========================================="
-
+            echo "Running MySQL migrations..."
             docker compose exec -T nestjs npm run migration:mysql:run
 
-            echo "========================================="
             echo "Running PostgreSQL migrations..."
-            echo "========================================="
-
             docker compose exec -T nestjs npm run migration:postgres:run
 
-            echo "========================================="
-            echo "Docker status..."
-            echo "========================================="
-
+            echo "Docker status:"
             docker compose ps
 
-            echo "========================================="
-            echo "NestJS logs..."
-            echo "========================================="
-
+            echo "NestJS logs:"
             docker compose logs --tail=50 nestjs
 
-            echo "========================================="
-            echo "Disk usage..."
-            echo "========================================="
-
+            echo "Disk usage:"
             df -h
 
-            echo "========================================="
             echo "Deployment completed successfully!"
-            echo "========================================="

@@ -1,7 +1,9 @@
 services:
 
   nestjs:
-    image: nestjs_app
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: nestjs_app
     restart: unless-stopped
     env_file:

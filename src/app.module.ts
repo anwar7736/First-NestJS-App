@@ -35,10 +35,10 @@ import { APP_GUARD } from "@nestjs/core";
     ]
 })
 
-export class AppModule implements NestModule{
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-        .apply(LoggerMiddleware)
-        .forRoutes('*');
-    }
+export class AppModule{
+    // configure(consumer: MiddlewareConsumer) {
+    //     consumer
+    //     .apply(LoggerMiddleware)
+    //     .forRoutes('*');
+    // }
 }

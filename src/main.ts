@@ -13,7 +13,7 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
-  app.use(FunctionalMiddleware);
+  // app.use(FunctionalMiddleware);
 
 //   //Config for RabbitMQ
 //   app.connectMicroservice({

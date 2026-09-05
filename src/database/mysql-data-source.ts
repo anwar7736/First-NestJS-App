@@ -12,7 +12,7 @@ export default new DataSource({
   database: process.env.MYSQL_DB_DATABASE,
 
   entities: ['dist/**/*.entity.js'],
-  migrations: ['dist/migrations/postgres/*.js'],
+  migrations: ['dist/migrations/mysql/*.js'],
 
   synchronize: false,
 });

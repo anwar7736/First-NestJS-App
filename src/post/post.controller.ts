@@ -6,7 +6,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { User } from 'src/user.decorator';
 import { EventPattern, Payload } from '@nestjs/microservices';
 
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('posts')
 export class PostController {
     constructor(private readonly postService: PostService){}

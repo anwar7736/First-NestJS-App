@@ -1,0 +1,84 @@
+name: Deploy NestJS Application
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.2
+
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+
+          script: |
+            set -e
+
+            cd /home/ec2-user/First-NestJS-App
+
+            echo "========================================="
+            echo "Pulling latest code..."
+            echo "========================================="
+
+            git pull origin main
+
+            echo "========================================="
+            echo "Building NestJS Docker image..."
+            echo "========================================="
+
+            docker compose build nestjs
+
+            echo "========================================="
+            echo "Starting Docker containers..."
+            echo "========================================="
+
+            docker compose up -d
+
+            echo "========================================="
+            echo "Waiting for containers..."
+            echo "========================================="
+
+            sleep 10
+
+            echo "========================================="
+            echo "Running MySQL/MariaDB migrations..."
+            echo "========================================="
+
+            docker compose exec -T nestjs npm run migration:mysql:run
+
+            echo "========================================="
+            echo "Running PostgreSQL migrations..."
+            echo "========================================="
+
+            docker compose exec -T nestjs npm run migration:postgres:run
+
+            echo "========================================="
+            echo "Docker status..."
+            echo "========================================="
+
+            docker compose ps
+
+            echo "========================================="
+            echo "NestJS logs..."
+            echo "========================================="
+
+            docker compose logs --tail=50 nestjs
+
+            echo "========================================="
+            echo "Disk usage..."
+            echo "========================================="
+
+            df -h
+
+            echo "========================================="
+            echo "Deployment completed successfully!"
+            echo "========================================="

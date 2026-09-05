@@ -1,0 +1,52 @@
+services:
+
+  nestjs:
+    image: nestjs_app
+    container_name: nestjs_app
+    restart: unless-stopped
+    env_file:
+      - .env
+    expose:
+      - "3000"
+    depends_on:
+      - mariadb
+      - postgres
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: nestjs_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - nestjs
+
+  mariadb:
+    image: mariadb:10.4
+    container_name: nestjs_mariadb
+    restart: unless-stopped
+    environment:
+       MARIADB_ROOT_PASSWORD: ${MYSQL_DB_ROOT_PASSWORD}
+       MARIADB_DATABASE: ${MYSQL_DB_DATABASE}
+       MARIADB_USER: ${MYSQL_DB_USERNAME}
+       MARIADB_PASSWORD: ${MYSQL_DB_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  postgres:
+    image: postgres:18
+    container_name: nestjs_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${PGSQL_DB_DATABASE}
+      POSTGRES_USER: ${PGSQL_DB_USERNAME}
+      POSTGRES_PASSWORD: ${PGSQL_DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  mariadb_data:
+  postgres_data:
